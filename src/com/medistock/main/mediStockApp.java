@@ -35,6 +35,13 @@ public class mediStockApp {
                     running = false;
                     System.out.println("Exiting MediStock. Goodbye!");
                     break;
+                case 4:
+                    System.out.print("Enter days threshold (e.g., 30 for next month): ");
+                    int days = scanner.nextInt();
+                    var expiring = manager.getAlerter().getExpiringSoon(days);
+                    System.out.println("⚠️ URGENT: " + expiring.size() + " items expiring soon!");
+                    expiring.forEach(item -> System.out.println(" - " + item.getName() + " Exp: " + item.getExpirationDate()));
+                    break;
                 default:
                     System.out.println("Invalid option. Try again.");
             }

@@ -1,5 +1,6 @@
 package com.medistock.data;
 
+import com.medistock.service.StockAlerter;
 import com.medistock.model.InventoryItem;
 import com.medistock.data.CSVParser;
 import java.util.HashMap;
@@ -10,10 +11,13 @@ public class InventoryManager {
 	// Key: ItemID (String), Value: The InventoryItem object
     private Map<String, InventoryItem> inventory;
     private CSVParser parser;
+    // Integrating StockAlerter into InventoryManager
+    private StockAlerter alerter;
 
     public InventoryManager() {
         this.inventory = new HashMap<>();
         this.parser = new CSVParser();
+        this.alerter = new StockAlerter();
     }
 
     /**
@@ -25,6 +29,8 @@ public class InventoryManager {
             for (InventoryItem item : items) {
                 // Store in map using ItemId as the unique key
                 inventory.put(item.getItemId(), item);
+                // Feed into the Alerter (for expiration tracking)
+                alerter.addItem(item);
             }
             System.out.println("✅ Inventory Manager updated: " + inventory.size() + " items loaded.");
         } catch (Exception e) {
@@ -39,5 +45,10 @@ public class InventoryManager {
     public Map<String, InventoryItem> getAllItems() {
         return inventory;
     }
+    
+    public StockAlerter getAlerter() {
+        return this.alerter;
+    }
+    
 }
 

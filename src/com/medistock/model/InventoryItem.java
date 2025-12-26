@@ -2,7 +2,7 @@ package com.medistock.model;
 
 import java.time.LocalDate;
 
-public class InventoryItem {
+public class InventoryItem implements Comparable<InventoryItem> {
 	// Core Attributes
 	private String itemId;
 	private String name;
@@ -31,6 +31,13 @@ public class InventoryItem {
 
 	public String getItemId() {
 		return itemId;
+	}
+
+	@Override
+	public String toString() {
+		return "InventoryItem [itemId=" + itemId + ", name=" + name + ", quantity=" + quantity + ", unitCost="
+				+ unitCost + ", expirationDate=" + expirationDate + ", supplier=" + supplier + ", location=" + location
+				+ ", batchNumber=" + batchNumber + "]";
 	}
 
 	public void setItemId(String itemId) {
@@ -91,6 +98,13 @@ public class InventoryItem {
 
 	public void setBatchNumber(String batchNumber) {
 		this.batchNumber = batchNumber;
+	}
+	
+	@Override
+	public int compareTo(InventoryItem other) {
+		// This sorts items so the earliest expiration date come first
+		if (this.expirationDate == null || other.expirationDate == null) return 0;
+		return this.expirationDate.compareTo(other.expirationDate);
 	}
 	
 	
