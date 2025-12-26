@@ -59,7 +59,7 @@ public class DataMapper {
         // Instantiate the Medication object
         return new Medication(
             itemId, 
-            row[2], // Drug Name
+            row[1], // Drug Name
             quantity, 
             unitCost, 
             expirationDate, 

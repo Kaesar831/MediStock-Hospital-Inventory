@@ -1,6 +1,8 @@
 package com.medistock.main;
 
 import com.medistock.data.InventoryManager;
+import com.medistock.model.InventoryItem;
+
 import java.util.Scanner;
 
 public class mediStockApp {
@@ -17,6 +19,8 @@ public class mediStockApp {
             System.out.println("\n1. Load Data from CMS CSV");
             System.out.println("2. View Total Inventory Count");
             System.out.println("3. Exit");
+            System.out.println("4. Check for Expiring Items");
+            System.out.println("5. Update Item Quantity");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -42,11 +46,22 @@ public class mediStockApp {
                     System.out.println("⚠️ URGENT: " + expiring.size() + " items expiring soon!");
                     expiring.forEach(item -> System.out.println(" - " + item.getName() + " Exp: " + item.getExpirationDate()));
                     break;
+                 // Inside the while loop switch statement:
+                case 5:
+                    System.out.print("Enter Item ID to update (e.g., INV-1): ");
+                    String idToUpdate = scanner.nextLine();
+                    System.out.print("Enter NEW quantity (try '5' to trigger alert): ");
+                    int newQty = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                    
+                    manager.updateItemQuantity(idToUpdate, newQty);
+                    break;
                 default:
                     System.out.println("Invalid option. Try again.");
             }
         }
         scanner.close();
     }
+	
 
 }
