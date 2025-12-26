@@ -7,13 +7,17 @@ public class Medication extends InventoryItem {
 	private String dosageForm; // e.g., Tablet, Capsule, Liquid
 	private String ndcCode; // national drug code - Critical identifier
 	private boolean isControlledSubstance;
+	private boolean isGeneric;
 	// This is where reimbursement logic will hook in later
 	public static final double MEDICARE_PART_B_FACTOR = 1.06; // ASP + 6%
     public static final double DRUG_340B_DISCOUNT_FACTOR = 0.75; // Typical 25% discount
+    public static final double BRAND_REIMBURSEMENT_FACTOR = 1.06;
+    public static final double GENERIC_REIMBURSEMENT_FACTOR = 1.08;
 	
 	// Constructor
 	public Medication(String itemId, String name, int quantity, double unitCost, LocalDate expirationDate,
-			Supplier supplier, HospitalWard location, String batchNumber, String dosageForm, String ndcCode, boolean isControlledSubstance) {
+			Supplier supplier, HospitalWard location, String batchNumber, String dosageForm, String ndcCode, 
+			boolean isControlledSubstance, boolean isGeneric) {
 		super(itemId, name, quantity, unitCost, expirationDate, supplier, location, batchNumber);
 		// TODO Auto-generated constructor stub
 		this.dosageForm = dosageForm;
@@ -47,6 +51,10 @@ public class Medication extends InventoryItem {
 	public boolean isControlledSubstance() {
 		return isControlledSubstance;
 	}
+	
+	public boolean isGeneric() { 
+		return isGeneric; 
+	}
 
 	public void setControlledSubstance(boolean isControlledSubstance) {
 		this.isControlledSubstance = isControlledSubstance;
@@ -56,12 +64,18 @@ public class Medication extends InventoryItem {
 	 * Calculates the estimated government reimbursement based on the 
 	 * Medicare Part B formula: (ASP + 6%).
 	 * Uses the professional constant for Medicare Part B (ASP + 6%).
+	 * Implements core CMS reimbursement logic.
+     * Differentiates between Branded and Generic drug types.
 	 * @return total reimbursement amount
 	 */
 	public double calculateReimbursement() {
-	    double totalCost = this.getUnitCost() * this.getQuantity();
-	    // ASP + 6% is essentially multiplying the total cost by 1.06
-	    return totalCost * MEDICARE_PART_B_FACTOR;
+	    double baseValue = this.getUnitCost() * this.getQuantity();
+	    if (this.isGeneric) {
+            return baseValue * GENERIC_REIMBURSEMENT_FACTOR;
+        } else {
+            return baseValue * BRAND_REIMBURSEMENT_FACTOR;
+        }
+	   
 	}
 	
 	/**

@@ -23,6 +23,7 @@ public class mediStockApp {
             System.out.println("4. Check for Expiring Items");
             System.out.println("5. Update Item Quantity");
             System.out.println("6. View Financial/Reimbursement Report");
+            System.out.println("7. Hospital Executive Summary Report");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -76,6 +77,27 @@ public class mediStockApp {
                     } else {
                         System.out.println("❌ Financial reports are currently only available for Medication items.");
                     }
+                    break;
+                case 7:
+                    double totalHospitalReimbursement = 0;
+                    int genericCount = 0;
+                    int brandCount = 0;
+
+                    for (InventoryItem item : manager.getAllItems().values()) {
+                        if (item instanceof Medication) {
+                            Medication med = (Medication) item;
+                            totalHospitalReimbursement += med.calculateReimbursement();
+                            
+                            if (med.isGeneric()) genericCount++;
+                            else brandCount++;
+                        }
+                    }
+                    System.out.println("\n======= 🏥 HOSPITAL EXECUTIVE SUMMARY =======");
+                    System.out.println("Total Items Tracked: " + manager.getInventoryCount());
+                    System.out.println("Medication Breakdown: " + genericCount + " Generics, " + brandCount + " Branded");
+                    System.out.println("----------------------------------------------");
+                    System.out.printf("TOTAL EST. REIMBURSEMENT: $%.2f%n", totalHospitalReimbursement);
+                    System.out.println("===============================================");
                     break;
                 default:
                     System.out.println("Invalid option. Try again.");

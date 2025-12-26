@@ -55,7 +55,9 @@ public class DataMapper {
         // --- 2. Object Instantiation (Medication) ---
         // Simple logic to determine if it's a controlled substance (e.g., if dosage form contains 'OXY' or 'MOR')
         boolean isControlled = row[2].toUpperCase().contains("OXY") || row[2].toUpperCase().contains("MOR"); 
-
+        String drugName = row[1];
+        // Simple logic: if the name is all uppercase, we'll assume it's a generic
+        boolean genericCheck = drugName.equals(drugName.toUpperCase());
         // Instantiate the Medication object
         return new Medication(
             itemId, 
@@ -68,7 +70,8 @@ public class DataMapper {
             batchNumber,
             dosageForm,
             ndcCode,
-            isControlled
+            isControlled,
+            genericCheck
             );	
 	}
 }
