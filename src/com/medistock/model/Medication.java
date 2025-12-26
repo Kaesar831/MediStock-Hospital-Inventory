@@ -24,6 +24,12 @@ public class Medication extends InventoryItem {
 		return dosageForm;
 	}
 
+	@Override
+	public String toString() {
+		return "Medication [dosageForm=" + dosageForm + ", ndcCode=" + ndcCode + ", isControlledSubstance="
+				+ isControlledSubstance + "]";
+	}
+
 	public void setDosageForm(String dosageForm) {
 		this.dosageForm = dosageForm;
 	}

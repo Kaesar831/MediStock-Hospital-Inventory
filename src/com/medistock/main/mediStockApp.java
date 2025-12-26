@@ -46,7 +46,6 @@ public class mediStockApp {
                     System.out.println("⚠️ URGENT: " + expiring.size() + " items expiring soon!");
                     expiring.forEach(item -> System.out.println(" - " + item.getName() + " Exp: " + item.getExpirationDate()));
                     break;
-                 // Inside the while loop switch statement:
                 case 5:
                     System.out.print("Enter Item ID to update (e.g., INV-1): ");
                     String idToUpdate = scanner.nextLine();
