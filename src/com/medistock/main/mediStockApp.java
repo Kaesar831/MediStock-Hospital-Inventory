@@ -2,6 +2,7 @@ package com.medistock.main;
 
 import com.medistock.data.InventoryManager;
 import com.medistock.model.InventoryItem;
+import com.medistock.model.Medication;
 
 import java.util.Scanner;
 
@@ -21,6 +22,7 @@ public class mediStockApp {
             System.out.println("3. Exit");
             System.out.println("4. Check for Expiring Items");
             System.out.println("5. Update Item Quantity");
+            System.out.println("6. View Financial/Reimbursement Report");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -54,6 +56,26 @@ public class mediStockApp {
                     scanner.nextLine(); // consume newline
                     
                     manager.updateItemQuantity(idToUpdate, newQty);
+                    break;
+                case 6:
+                    System.out.print("Enter Item ID for Financial Report: ");
+                    String finId = scanner.nextLine().toUpperCase();
+                    InventoryItem selected = manager.getAllItems().get(finId);
+
+                    if (selected instanceof Medication) {
+                        Medication med = (Medication) selected; // Cast to Medication to access subclass methods
+                        System.out.println("--- FINANCIAL REPORT ---");
+                        System.out.println("Drug: " + med.getName());
+                        System.out.printf("Current Inventory Value: $%.2f%n", (med.getUnitCost() * med.getQuantity()));
+                        System.out.println("--------------------------------------");
+                        
+                        // Use the new methods we standardized with constants
+                        System.out.printf("Medicare Payout (ASP+6%%):   $%.2f%n", med.calculateReimbursement());
+                        System.out.printf("Estimated 340B Savings:      $%.2f%n", 
+                                          ((med.getUnitCost() * med.getQuantity()) - med.calculate340BCost()));
+                    } else {
+                        System.out.println("❌ Financial reports are currently only available for Medication items.");
+                    }
                     break;
                 default:
                     System.out.println("Invalid option. Try again.");

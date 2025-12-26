@@ -8,6 +8,8 @@ public class Medication extends InventoryItem {
 	private String ndcCode; // national drug code - Critical identifier
 	private boolean isControlledSubstance;
 	// This is where reimbursement logic will hook in later
+	public static final double MEDICARE_PART_B_FACTOR = 1.06; // ASP + 6%
+    public static final double DRUG_340B_DISCOUNT_FACTOR = 0.75; // Typical 25% discount
 	
 	// Constructor
 	public Medication(String itemId, String name, int quantity, double unitCost, LocalDate expirationDate,
@@ -49,6 +51,26 @@ public class Medication extends InventoryItem {
 	public void setControlledSubstance(boolean isControlledSubstance) {
 		this.isControlledSubstance = isControlledSubstance;
 	}
+	
+	/**
+	 * Calculates the estimated government reimbursement based on the 
+	 * Medicare Part B formula: (ASP + 6%).
+	 * Uses the professional constant for Medicare Part B (ASP + 6%).
+	 * @return total reimbursement amount
+	 */
+	public double calculateReimbursement() {
+	    double totalCost = this.getUnitCost() * this.getQuantity();
+	    // ASP + 6% is essentially multiplying the total cost by 1.06
+	    return totalCost * MEDICARE_PART_B_FACTOR;
+	}
+	
+	/**
+     * Added logic for 340B pricing
+     * Calculates what the hospital pays after the 340B discount.
+     */
+    public double calculate340BCost() {
+        return (this.getUnitCost() * this.getQuantity()) * DRUG_340B_DISCOUNT_FACTOR;
+    }
 	
 	
 	
