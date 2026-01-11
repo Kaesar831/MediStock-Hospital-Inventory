@@ -32,21 +32,51 @@ public class DatabaseManager {
      * Initializes the database tables if they don't exist.
      */
     public static void initializeDatabase() {
-        String createTableSQL = "CREATE TABLE IF NOT EXISTS inventory (" +
-                                "id TEXT PRIMARY KEY, " +
-                                "name TEXT, " +
-                                "quantity INTEGER, " +
-                                "unit_cost REAL, " +
-                                "expiry_date TEXT, " +
-                                "supplier_id TEXT, " +
-                                "ward_id TEXT" +
-                                ");";
+        // 1. Create Suppliers Table
+        String createSuppliers = "CREATE TABLE IF NOT EXISTS suppliers (" +
+                "supplier_id TEXT PRIMARY KEY, " +
+                "name TEXT NOT NULL, " +
+                "contact_person TEXT, " +
+                "phone_number TEXT" +
+                ");";
+
+        // 2. Create Wards Table
+        String createWards = "CREATE TABLE IF NOT EXISTS wards (" +
+                "ward_id TEXT PRIMARY KEY, " +
+                "name TEXT NOT NULL, " +
+                "department TEXT, " +
+                "capacity INTEGER" +
+                ");";
+
+        // 3. Create Medications Table (links to both above)
+        String createMedications = "CREATE TABLE IF NOT EXISTS medications (" +
+                "id TEXT PRIMARY KEY, " +
+                "name TEXT NOT NULL, " +
+                "quantity INTEGER, " +
+                "unit_cost REAL, " +
+                "expiry_date TEXT, " +
+                "supplier_id TEXT, " +
+                "ward_id TEXT, " +
+                "batch_number TEXT, " +
+                "dosage TEXT, " +
+                "ndc_code TEXT, " +
+                "is_controlled INTEGER, " + // SQLite uses 0/1 for booleans
+                "is_generic INTEGER, " +
+                "FOREIGN KEY(supplier_id) REFERENCES suppliers(supplier_id), " +
+                "FOREIGN KEY(ward_id) REFERENCES wards(ward_id)" +
+                ");";
+
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(createTableSQL);
-            System.out.println("✅ Inventory table verified/created.");
+            
+            // Execute in order
+            stmt.execute(createSuppliers);
+            stmt.execute(createWards);
+            stmt.execute(createMedications);
+            
+            System.out.println("✅ All MediStock tables verified/created.");
         } catch (SQLException e) {
-            System.err.println("❌ Database Init Error: " + e.getMessage());
+            System.err.println("❌ Schema Creation Error: " + e.getMessage());
         }
     }
 }
