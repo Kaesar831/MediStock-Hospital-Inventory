@@ -23,6 +23,7 @@ public class Medication extends InventoryItem {
 		this.dosageForm = dosageForm;
 		this.ndcCode = ndcCode;
 		this.isControlledSubstance = isControlledSubstance;
+		this.isGeneric = isGeneric;
 	}
 	
 	// Getters and Setters Methods

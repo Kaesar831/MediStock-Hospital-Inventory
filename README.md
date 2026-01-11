@@ -21,3 +21,9 @@
 - **Build Tool:** Maven
 - **Libraries:** OpenCSV
 - **Data Source:** CMS.gov Medicare Part D Prescriber Data
+### Week 2: Intelligent Monitoring & Financial Logic (COMPLETED)
+- [x] **Expiration Engine:** Implemented `PriorityQueue` for $O(1)$ access to most urgent expiring medications.
+- [x] **Observer Pattern:** Built a decoupled notification system (`StockNotifier`) with Email and SMS stubs.
+- [x] **Automated Alerts:** Integrated low-stock triggers that broadcast messages to multiple observers.
+- [x] **CMS Reimbursement Logic:** Developed calculations for **Medicare Part B (ASP + 6%)** and **340B Drug Pricing**.
+- [x] **Unit Testing:** Achieved high test coverage for financial logic and data structures using **JUnit 5**.
