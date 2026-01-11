@@ -3,6 +3,7 @@ package com.medistock.main;
 import com.medistock.data.InventoryManager;
 import com.medistock.model.InventoryItem;
 import com.medistock.model.Medication;
+import com.medistock.repository.DatabaseManager;
 
 import java.util.Scanner;
 
@@ -15,6 +16,7 @@ public class mediStockApp {
         System.out.println("   MediStock Hospital Inventory System  ");
         System.out.println("========================================");
 
+        DatabaseManager.initializeDatabase();
         boolean running = true;
         while (running) {
             System.out.println("\n1. Load Data from CMS CSV");
