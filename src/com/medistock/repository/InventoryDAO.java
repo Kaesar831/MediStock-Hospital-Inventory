@@ -3,6 +3,7 @@ package com.medistock.repository;
 import com.medistock.model.HospitalWard;
 import com.medistock.model.Medication;
 import com.medistock.model.Supplier;
+import com.medistock.util.SecurityLogger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,8 +14,9 @@ public class InventoryDAO {
 
     /**
      * Exports all Java Medication objects to the SQL database using Batch processing.
+     * @param userRole 
      */
-    public void exportMedications(List<Medication> inventory) {
+    public void exportMedications(List<Medication> inventory, String userRole) {
         String sql = "INSERT OR REPLACE INTO medications (id, name, quantity, unit_cost, expiry_date, " +
                      "supplier_id, ward_id, batch_number, dosage, ndc_code, is_controlled, is_generic) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -46,6 +48,14 @@ public class InventoryDAO {
             
         } catch (SQLException e) {
             System.err.println("❌ Export Error: " + e.getMessage());
+        }
+        
+        try {
+            // ... (after successful conn.commit())
+            SecurityLogger.logAction(userRole, "DATABASE_SYNC", 
+                "Batch export of " + inventory.size() + " items.");
+        } catch (Exception e) {
+            SecurityLogger.logAction(userRole, "ERROR", "Failed sync: " + e.getMessage());
         }
     }
     

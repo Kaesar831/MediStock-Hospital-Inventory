@@ -4,12 +4,15 @@ import com.medistock.data.InventoryManager;
 import com.medistock.model.InventoryItem;
 import com.medistock.model.Medication;
 import com.medistock.repository.DatabaseManager;
+import com.medistock.repository.InventoryDAO;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class mediStockApp {
 	public static void main(String[] args) {
         InventoryManager manager = new InventoryManager();
+        InventoryDAO inventoryDAO = new InventoryDAO();
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("========================================");
@@ -41,6 +44,21 @@ public class mediStockApp {
                     System.out.println("📊 Current Total Items: " + manager.getInventoryCount());
                     break;
                 case 3:
+                	// 🆕 1. Define the role (HIPAA requirement)
+                    String currentRole = "Pharmacist"; 
+
+                    // 🆕 2. Convert Map values to a List for the DAO
+                    java.util.List<Medication> medList = new ArrayList<>();
+                    for (InventoryItem item : manager.getAllItems().values()) {
+                        if (item instanceof Medication) {
+                            medList.add((Medication) item);
+                        }
+                    }
+
+                    // 🆕 3. Run the export and logging
+                    System.out.println("Saving to database and logging audit trail...");
+                    inventoryDAO.exportMedications(medList, currentRole);
+
                     running = false;
                     System.out.println("Exiting MediStock. Goodbye!");
                     break;
