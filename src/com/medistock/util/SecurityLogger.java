@@ -49,7 +49,7 @@ public class SecurityLogger {
      * Example: "12345-678-90" becomes "XXXXX-XXX-90"
      */
     public static String redact(String input) {
-        if (input == null || input.length() < 4) return "****";
-        return "HIDDEN-" + input.substring(input.length() - 4);
+        if (input == null || input.length() < 5) return "****";
+        return "HIDDEN-" + input.substring(input.length() - 5);
     }
 }
