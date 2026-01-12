@@ -5,6 +5,7 @@ import com.medistock.model.InventoryItem;
 import com.medistock.model.Medication;
 import com.medistock.repository.DatabaseManager;
 import com.medistock.repository.InventoryDAO;
+import com.medistock.util.SecurityLogger;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -85,6 +86,11 @@ public class mediStockApp {
 
                     if (selected instanceof Medication) {
                         Medication med = (Medication) selected; // Cast to Medication to access subclass methods
+                        
+                        // Redact the NDC code before logging
+                        String maskedNdc = SecurityLogger.redact(med.getNdcCode());
+                        SecurityLogger.logAction("Admin", "FINANCIAL_VIEW", "Viewed NDC: " + maskedNdc);
+                        
                         System.out.println("--- FINANCIAL REPORT ---");
                         System.out.println("Drug: " + med.getName());
                         System.out.printf("Current Inventory Value: $%.2f%n", (med.getUnitCost() * med.getQuantity()));

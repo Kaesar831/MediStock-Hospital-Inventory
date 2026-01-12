@@ -2,6 +2,7 @@ package com.medistock.data;
 
 import com.medistock.service.StockAlerter;
 import com.medistock.service.StockNotifier;
+import com.medistock.util.SecurityLogger;
 import com.medistock.service.EmailObserver;
 import com.medistock.service.SMSObserver;
 import com.medistock.model.InventoryItem;
@@ -92,7 +93,14 @@ public class InventoryManager {
         } else {
             System.err.println("❌ Item ID not found.");
         }
+        
+        String maskedId = SecurityLogger.redact(itemId); 
+        
+        SecurityLogger.logAction("Pharmacist", "STOCK_UPDATE", 
+            "Item: " + maskedId + " | New Qty: " + newQuantity);
     }
+    
+    
     
 }
 

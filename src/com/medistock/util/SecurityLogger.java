@@ -43,4 +43,13 @@ public class SecurityLogger {
                             role, action, details);
         logger.info(logMessage);
     }
+    
+    /**
+     * Redacts sensitive identifiers to maintain HIPAA compliance in logs.
+     * Example: "12345-678-90" becomes "XXXXX-XXX-90"
+     */
+    public static String redact(String input) {
+        if (input == null || input.length() < 4) return "****";
+        return "HIDDEN-" + input.substring(input.length() - 4);
+    }
 }
