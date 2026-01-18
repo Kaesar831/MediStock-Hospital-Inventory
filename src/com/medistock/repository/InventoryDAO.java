@@ -93,4 +93,63 @@ public class InventoryDAO {
         }
         return list;
     }
+    /**
+     * REPORT 1: Low Stock Alert
+     */
+    public void printLowStockReport(int threshold) {
+        String sql = "SELECT name, quantity FROM medications WHERE quantity < ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, threshold);
+            ResultSet rs = pstmt.executeQuery();
+            
+            System.out.println("\n--- ⚠️ LOW STOCK REPORT (Threshold: " + threshold + ") ---");
+            while (rs.next()) {
+                System.out.println("Item: " + rs.getString("name") + " | Qty: " + rs.getInt("quantity"));
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ SQL Report Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REPORT 2: Top High-Cost Items
+     */
+    public void printHighValueReport(int limit) {
+        String sql = "SELECT name, unit_cost FROM medications ORDER BY unit_cost DESC LIMIT ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, limit);
+            ResultSet rs = pstmt.executeQuery();
+            
+            System.out.println("\n--- 💰 TOP " + limit + " HIGHEST COST ITEMS ---");
+            while (rs.next()) {
+                System.out.printf("Item: %-20s | Unit Cost: $%.2f%n", rs.getString("name"), rs.getDouble("unit_cost"));
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ SQL Report Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REPORT 3: Total Potential Reimbursement (SQL Logic)
+     */
+    public void printTotalReimbursementReport() {
+        // SQL CASE statement mirrors your Java calculateReimbursement() logic
+        String sql = "SELECT SUM(CASE WHEN is_generic = 1 THEN (quantity * unit_cost) * 1.08 " +
+                     "ELSE (quantity * unit_cost) * 1.06 END) as total_reimbursement FROM medications";
+        
+        try (Connection conn = DatabaseManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            if (rs.next()) {
+                double total = rs.getDouble("total_reimbursement");
+                System.out.println("\n--- 🏥 TOTAL ESTIMATED HOSPITAL REIMBURSEMENT ---");
+                System.out.printf("Total Expected: $%.2f%n", total);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ SQL Report Error: " + e.getMessage());
+        }
+    }
 }

@@ -30,6 +30,9 @@ public class mediStockApp {
             System.out.println("5. Update Item Quantity");
             System.out.println("6. View Financial/Reimbursement Report");
             System.out.println("7. Hospital Executive Summary Report");
+            System.out.println("8. [SQL] Low Stock Report");
+            System.out.println("9. [SQL] Top 5 High-Cost Items");
+            System.out.println("10. [SQL] Total Reimbursement (All Inventory)");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -124,6 +127,17 @@ public class mediStockApp {
                     System.out.println("----------------------------------------------");
                     System.out.printf("TOTAL EST. REIMBURSEMENT: $%.2f%n", totalHospitalReimbursement);
                     System.out.println("===============================================");
+                    break;
+                case 8:
+                    System.out.print("Enter threshold for low stock: ");
+                    int threshold = scanner.nextInt();
+                    inventoryDAO.printLowStockReport(threshold);
+                    break;
+                case 9:
+                    inventoryDAO.printHighValueReport(5); // Show top 5
+                    break;
+                case 10:
+                    inventoryDAO.printTotalReimbursementReport();
                     break;
                 default:
                     System.out.println("Invalid option. Try again.");
