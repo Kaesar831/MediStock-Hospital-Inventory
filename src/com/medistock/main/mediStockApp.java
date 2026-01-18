@@ -33,6 +33,7 @@ public class mediStockApp {
             System.out.println("8. [SQL] Low Stock Report");
             System.out.println("9. [SQL] Top 5 High-Cost Items");
             System.out.println("10. [SQL] Total Reimbursement (All Inventory)");
+            System.out.println("11. Generate Tableau Dashboard CSV");
             System.out.print("Select an option: ");
 
             int choice = scanner.nextInt();
@@ -138,6 +139,9 @@ public class mediStockApp {
                     break;
                 case 10:
                     inventoryDAO.printTotalReimbursementReport();
+                    break;
+                case 11:
+                    inventoryDAO.exportForTableau("medistock_tableau_data.csv");
                     break;
                 default:
                     System.out.println("Invalid option. Try again.");

@@ -10,6 +10,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+
 public class InventoryDAO {
 
     /**
@@ -150,6 +154,44 @@ public class InventoryDAO {
             }
         } catch (SQLException e) {
             System.err.println("❌ SQL Report Error: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Creates a clean CSV file specifically for Tableau/PowerBI visualization.
+     */
+    public void exportForTableau(String filename) {
+        String sql = "SELECT name, quantity, unit_cost, is_generic, expiry_date FROM medications";
+        
+        try (Connection conn = DatabaseManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);
+             PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            
+            // 1. Write the Header Row
+            writer.println("ItemName,StockLevel,Cost,ReimbursementPotential,ExpirationDate");
+            
+            // 2. Process and Write Data
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int qty = rs.getInt("quantity");
+                double cost = rs.getDouble("unit_cost");
+                int isGeneric = rs.getInt("is_generic");
+                String expiry = rs.getString("expiry_date");
+                
+                // Calculate Reimbursement based on business logic
+                double factor = (isGeneric == 1) ? 1.08 : 1.06;
+                double reimbursement = (qty * cost) * factor;
+                
+                // Write formatted row
+                writer.printf("%s,%d,%.2f,%.2f,%s%n", 
+                              name, qty, cost, reimbursement, expiry);
+            }
+            
+            System.out.println("📊 Tableau Export Successful: " + filename);
+            
+        } catch (SQLException | IOException e) {
+            System.err.println("❌ Export Failed: " + e.getMessage());
         }
     }
 }
