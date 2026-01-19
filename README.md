@@ -27,3 +27,15 @@
 - [x] **Automated Alerts:** Integrated low-stock triggers that broadcast messages to multiple observers.
 - [x] **CMS Reimbursement Logic:** Developed calculations for **Medicare Part B (ASP + 6%)** and **340B Drug Pricing**.
 - [x] **Unit Testing:** Achieved high test coverage for financial logic and data structures using **JUnit 5**.
+
+## 📊 Data Visualization & Analytics
+The MediStock system exports clean CSV data for executive oversight. 
+
+### Interactive Dashboard
+You can view the live interactive dashboard here:
+[👉 View MediStock Executive Dashboard on Tableau Public](https://public.tableau.com/authoring/MediStock_Executive_Dashboard/Dashboard1#1)
+
+**Key Metrics Tracked:**
+* **Real-time Stock Levels:** Identified by Red-Green urgency mapping.
+* **Financial Risk:** Analysis of high-cost inventory batches.
+* **Reimbursement Potential:** Predicted Medicare/340B payouts based on current stock.
